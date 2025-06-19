@@ -1,0 +1,232 @@
+﻿@page "/water-source/create"
+
+@attribute [Authorize]
+
+<PageTitle>Add Water Source - Water Management System</PageTitle>
+
+<Breadcrumbs Title="Add Water Source"
+             BreadcrumbItems="@(new List<BreadcrumbItem>
+             {
+                new("Water Source", "", false),
+                new("List", "/water-source", false),
+                new("Add Water Source", "", true)
+             })" />
+
+<Section>
+    @if (!isLoading)
+    {
+        <EditForm class="row g-3 my-3" Model="Model" OnValidSubmit="HandleWaterSupplyCreate">
+            <DataAnnotationsValidator />
+            <ValidationSummary style="color:indianred" Model="@Model" />
+
+            <div class="col-md-3">
+                <label for="province" class="form-label text-secondary">Province<RequiredInput /></label>
+                <InputSelect id="province"
+                             class="form-select form-select-sm"
+                             @bind-Value="Model.ProvinceId"
+                             @bind-Value:after="OnAfterProvinceSelectedAsync">
+                    <option selected>Choose province</option>
+                    @foreach (var item in provinces)
+                    {
+                        <option value="@item.ProvinceId">@item.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage class="validation-message" For="(() => Model.ProvinceId)" />
+            </div>
+            <div class="col-md-3">
+                <label for="regency" class="form-label text-secondary">Regency<RequiredInput /></label>
+                <InputSelect id="regency"
+                             class="form-select form-select-sm"
+                             @bind-Value="Model.CityId"
+                             @bind-Value:after="OnAfterRegencySelectedAsync"
+                             disabled="@string.IsNullOrEmpty(Model.ProvinceId)">
+                    <option selected>Choose city</option>
+                    @foreach (var item in cities)
+                    {
+                        <option value="@item.CityId">@item.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage class="validation-message" For="(() => Model.CityId)" />
+            </div>
+            <div class="col-md-3">
+                <label for="district" class="form-label text-secondary">District<RequiredInput /></label>
+                <InputSelect id="district"
+                             class="form-select form-select-sm"
+                             @bind-Value="Model.DistrictId"
+                             @bind-Value:after="OnAfterDistrictSelectedAsync"
+                             disabled="@string.IsNullOrEmpty(Model.CityId)">
+                    <option selected>Choose district</option>
+                    @foreach (var item in districts)
+                    {
+                        <option value="@item.DistrictId">@item.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage class="validation-message" For="(() => Model.DistrictId)" />
+            </div>
+            <div class="col-md-3">
+                <label for="village" class="form-label text-secondary">Village<RequiredInput /></label>
+                <InputSelect id="village"
+                             class="form-select form-select-sm"
+                             @bind-Value="Model.SubDistrictId"
+                             disabled="@string.IsNullOrEmpty(Model.DistrictId)">
+                    <option selected>Choose village</option>
+                    @foreach (var item in subDistricts)
+                    {
+                        <option value="@item.SubDistrictId">@item.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage class="validation-message" For="(() => Model.SubDistrictId)" />
+            </div>
+            <div class="col-md-3">
+                <label for="code" class="form-label text-secondary">ID<RequiredInput /></label>
+                <InputText @bind-Value="Model.Code" DisplayName="ID" class="form-control form-control-sm" id="code" />
+                <ValidationMessage class="validation-message" For="(() => Model.Code)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="waterName" class="form-label text-secondary">Name<RequiredInput /></label>
+                <InputText @bind-Value="Model.Name" DisplayName="Name" class="form-control form-control-sm" id="waterName" />
+                <ValidationMessage class="validation-message" For="(() => Model.Name)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="waterType" class="form-label text-secondary">Type<RequiredInput /></label>
+                <InputSelect id="waterType" class="form-select form-select-sm" @bind-Value="Model.WaterSupplyTypeId">
+                    <option selected>Choose type</option>
+                    @foreach (var item in types)
+                    {
+                        <option value="@item.WaterSupplyTypeId">@item.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage class="validation-message" For="(() => Model.WaterSupplyTypeId)" />
+            </div>
+            <div class="col-md-3">
+                <label for="typeOther" class="form-label text-secondary">Other Type</label>
+                <InputText @bind-Value="Model.TypeOther" class="form-control form-control-sm" id="typeOther" />
+                <ValidationMessage class="validation-message" For="(() => Model.TypeOther)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="ph" class="form-label text-secondary">Ph</label>
+                <InputNumber @bind-Value="Model.Ph" DisplayName="Ph" class="form-control form-control-sm" id="ph" />
+                <ValidationMessage class="validation-message" For="(() => Model.Ph)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="tdsppm" class="form-label text-secondary">TDSPPM</label>
+                <InputNumber @bind-Value="Model.TDSPPM" DisplayName="TDSPPM" class="form-control form-control-sm" id="tdsppm" />
+                <ValidationMessage class="validation-message" For="(() => Model.TDSPPM)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="depth" class="form-label text-secondary">Depth</label>
+                <InputNumber @bind-Value="Model.Depth" DisplayName="Depth" class="form-control form-control-sm" id="depth" />
+                <ValidationMessage class="validation-message" For="(() => Model.Depth)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="waterTable" class="form-label text-secondary">Water Table</label>
+                <InputNumber @bind-Value="Model.WaterTable" DisplayName="Water Table" class="form-control form-control-sm" id="waterTable" />
+                <ValidationMessage class="validation-message" For="(() => Model.WaterTable)"></ValidationMessage>
+            </div>
+            <div class="col-md-4">
+                <label for="elevation" class="form-label text-secondary">Elevation</label>
+                <InputNumber @bind-Value="Model.Elevation" DisplayName="Elevation" class="form-control form-control-sm" id="elevation" />
+                <ValidationMessage class="validation-message" For="(() => Model.Elevation)"></ValidationMessage>
+            </div>
+            <div class="col-md-4">
+                <label for="waterConditions" class="form-label text-secondary">Water Conditions<RequiredInput /></label>
+                <InputSelect id="waterConditions" class="form-select form-select-sm" @bind-Value="Model.Conditions">
+                    @foreach (var item in conditions)
+                    {
+                        <option value="@item.WaterConditionId">@item.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage class="validation-message" For="(() => Model.Conditions)" />
+            </div>
+            <div class="col-md-4">
+                <label for="waterConditionOther" class="form-label text-secondary">Other Water Condition</label>
+                <InputText @bind-Value="Model.ConditionOther" class="form-control form-control-sm" id="waterConditionOther" />
+                <ValidationMessage class="validation-message" For="(() => Model.ConditionOther)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="startSurveyDt" class="form-label text-secondary">Start Survey<RequiredInput /></label>
+                <InputDate @bind-Value="Model.StartSurveyDt" DisplayName="Start Survey" class="form-control form-control-sm" id="startSurveyDt" />
+                <ValidationMessage class="validation-message" For="(() => Model.StartSurveyDt)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="endSurveyDt" class="form-label text-secondary">End Survey<RequiredInput /></label>
+                <InputDate @bind-Value="Model.EndSurveyDt" DisplayName="End Survey" class="form-control form-control-sm" id="endSurveyDt" />
+                <ValidationMessage class="validation-message" For="(() => Model.EndSurveyDt)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="latitude" class="form-label text-secondary">Latitude<RequiredInput /></label>
+                <InputNumber @bind-Value="Model.Latitude" DisplayName="Latitude" class="form-control form-control-sm" id="latitude" />
+                <ValidationMessage class="validation-message" For="(() => Model.Latitude)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="longitude" class="form-label text-secondary">Longitude<RequiredInput /></label>
+                <InputNumber @bind-Value="Model.Longitude" DisplayName="Longitude" class="form-control form-control-sm" id="longitude" />
+                <ValidationMessage class="validation-message" For="(() => Model.Longitude)"></ValidationMessage>
+            </div>
+
+            <div class="col-md-6">
+                <label for="socialMapping" class="form-label text-secondary">Social Mapping<RequiredInput /></label>
+                <InputTextArea @bind-Value="Model.SocialMapping" class="form-control form-control-sm" id="socialMapping" />
+                <ValidationMessage class="validation-message" For="(() => Model.SocialMapping)"></ValidationMessage>
+            </div>
+            <div class="col-md-6">
+                <label for="vegetation" class="form-label text-secondary">Vegetation<RequiredInput /></label>
+                <InputTextArea @bind-Value="Model.Vegetation" class="form-control form-control-sm" id="vegetation" />
+                <ValidationMessage class="validation-message" For="(() => Model.Vegetation)"></ValidationMessage>
+            </div>
+            <div class="col-md-6">
+                <label for="rainfall" class="form-label text-secondary">Rainfall<RequiredInput /></label>
+                <InputTextArea @bind-Value="Model.Rainfall" class="form-control form-control-sm" id="rainfall" />
+                <ValidationMessage class="validation-message" For="(() => Model.Rainfall)"></ValidationMessage>
+            </div>
+            <div class="col-md-6">
+                <label for="demography" class="form-label text-secondary">Demography<RequiredInput /></label>
+                <InputTextArea @bind-Value="Model.Demography" class="form-control form-control-sm" id="demography" />
+                <ValidationMessage class="validation-message" For="(() => Model.Demography)"></ValidationMessage>
+            </div>
+            <div class="col-md-6">
+                <label for="generalGeology" class="form-label text-secondary">General Geology<RequiredInput /></label>
+                <InputTextArea @bind-Value="Model.GeneralGeology" class="form-control form-control-sm" id="generalGeology" />
+                <ValidationMessage class="validation-message" For="(() => Model.GeneralGeology)"></ValidationMessage>
+            </div>
+            <div class="col-md-6">
+                <label for="detailLocation" class="form-label text-secondary">Detail Location</label>
+                <InputTextArea @bind-Value="Model.DetailLocation" class="form-control form-control-sm" id="detailLocation" />
+                <ValidationMessage class="validation-message" For="(() => Model.DetailLocation)"></ValidationMessage>
+            </div>
+            <div class="col-md-3">
+                <label for="image" class="form-label text-secondary">Image</label>
+                <InputFile class="form-control form-control-sm" id="image" OnChange="@OnInputFileChange" accept="image/*" multiple />
+            </div>
+
+            <div class="mt-3">
+                <hr>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-sm btn-blue" type="submit" disabled="@isLoadingButton">
+                    @if (isLoadingButton)
+                    {
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span role="status">Loading...</span>
+                    }
+                    else
+                    {
+                        <span>Save</span>
+                    }
+                </button>
+
+                <Button Title="Cancel"
+                        ButtonColor="btn-secondary"
+                        ButtonIcon="bi-backspace"
+                        ButtonType="button"
+                        OnClick="HandleButtonCancel" />
+            </div>
+        </EditForm>
+    }
+    else
+    {
+        <Spinner />
+    }
+</Section>
+
+

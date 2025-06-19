@@ -1,0 +1,32 @@
+﻿@page "/gis"
+@layout OtherLayout
+
+<PageTitle>GIS - Water Data</PageTitle>
+
+@if(!isLoading)
+{
+    <div class="row position-relative">
+        <div id="map" style="width:100%; height:100vh;"></div>
+
+        <div class="position-absolute h-25 w-25 bottom-0 end-0 bg-white" style="z-index:100">
+            <div class="row p-3">
+                <h4 class="fw-bold">Komodo Water</h4>
+
+                <ul class="list-group">
+                    <li class="list-group-item border-0">
+                        <input class="form-check-input me-1" type="checkbox" @onclick="ToggleWaterSource" id="firstCheckbox" checked="@Query.IsNotEmptyWaterSource">
+                        <label class="form-check-label" for="firstCheckbox">Water Data</label>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <input class="form-check-input me-1" type="checkbox" @onclick="ToggleGeophysics" id="secondCheckbox" checked="@Query.IsNotEmptyGeophysics">
+                        <label class="form-check-label" for="secondCheckbox">Geophisics Data</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <Spinner />
+}

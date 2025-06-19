@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1CE43EC7-7660-4064-BAFF-049FDC7DEF3A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Water.Management.Client", "src\Water.Management.Client\Water.Management.Client.csproj", "{5ABEE14F-3360-43A3-9761-8C4C0DA3C075}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Water.Management.Application", "src\Water.Management.Application\Water.Management.Application.csproj", "{F9887F28-1D0E-4A34-9627-E04331F91FDC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{537596EE-6524-47E4-868F-2210C6BAF2B8}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+		nginx.conf = nginx.conf
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Water.Management.Shared", "src\Water.Management.Shared\Water.Management.Shared.csproj", "{0C7188E3-3D55-4855-9A93-160040FEE420}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5ABEE14F-3360-43A3-9761-8C4C0DA3C075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ABEE14F-3360-43A3-9761-8C4C0DA3C075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ABEE14F-3360-43A3-9761-8C4C0DA3C075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ABEE14F-3360-43A3-9761-8C4C0DA3C075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9887F28-1D0E-4A34-9627-E04331F91FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9887F28-1D0E-4A34-9627-E04331F91FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9887F28-1D0E-4A34-9627-E04331F91FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9887F28-1D0E-4A34-9627-E04331F91FDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7188E3-3D55-4855-9A93-160040FEE420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7188E3-3D55-4855-9A93-160040FEE420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7188E3-3D55-4855-9A93-160040FEE420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7188E3-3D55-4855-9A93-160040FEE420}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5ABEE14F-3360-43A3-9761-8C4C0DA3C075} = {1CE43EC7-7660-4064-BAFF-049FDC7DEF3A}
+		{F9887F28-1D0E-4A34-9627-E04331F91FDC} = {1CE43EC7-7660-4064-BAFF-049FDC7DEF3A}
+		{0C7188E3-3D55-4855-9A93-160040FEE420} = {1CE43EC7-7660-4064-BAFF-049FDC7DEF3A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {140782BD-C115-4943-89BF-85DB3F535963}
+	EndGlobalSection
+EndGlobal

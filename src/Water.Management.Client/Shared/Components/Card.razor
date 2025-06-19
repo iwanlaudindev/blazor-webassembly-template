@@ -1,0 +1,37 @@
+﻿<div class="card info-card @CardClass">
+    <div class="card-body">
+        <h5 class="card-title">@Titel</h5>
+        <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="@Icon"></i>
+            </div>
+            <div class="ps-3">
+                @if (Value is not null)
+                {
+                    <h6>@Value</h6>
+                }
+                else
+                {
+                    <SpinnerGrow />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? CardClass { get; set; }
+
+    [Parameter]
+    public string? Titel { get; set; }
+
+    [Parameter]
+    public int? Value { get; set; }
+
+    [Parameter]
+    public string? TextColor { get; set; }
+    
+    [Parameter]
+    public string? Icon { get; set; }
+}

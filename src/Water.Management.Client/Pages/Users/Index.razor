@@ -1,0 +1,93 @@
+﻿@page "/users"
+
+@attribute [Authorize]
+
+<PageTitle>Users - Water Management System</PageTitle>
+
+<Breadcrumbs Title="User Management"
+             BreadcrumbItems="@(new List<BreadcrumbItem>
+             {
+                new("User Management", "", false),
+                new("List", "", false)
+             })" />
+
+<Section>
+    <div class="d-grid d-md-flex my-3 justify-content-md-end">
+        <a class="btn btn-sm btn-blue-lighter link-primary px-2" href="/users/create" role="button">
+            <i class="bi bi-plus-circle me-1"></i> Add User
+        </a>
+    </div>
+
+    <hr />
+
+    <Search OnSearch="OnSearch" />
+
+    <hr />
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Created By</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(!isLoading)
+                {
+                    @if (users is not null && users.Items.Count > 0)
+                    {
+                        int Number = ((Query.Page - 1) * Query.PageSize) + 1;
+                        @foreach (var item in users.Items)
+                        {
+                            <tr>
+                                <th class="text-secondary-emphasis" scope="row">@Number</th>
+                                <td class="text-secondary-emphasis">
+                                    <a href="@($"/users/detail/{item.UserId}")">@item.Username</a>
+                                </td>
+                                <td class="text-secondary-emphasis">@item.FullName</td>
+                                <td class="text-secondary-emphasis">@item.Role</td>
+                                <td class="text-secondary-emphasis">@item.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-secondary-emphasis">@item.CreatedByName</td>
+                                <td class="g-1">
+                                    <a class="btn btn-sm btn-blue-lighter" href="@($"/users/edit/{item.UserId}")" role="button">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+
+                            Number++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <div class="text-center p-5 my-5">
+                                    <p class="h5">Sorry, search not found!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">
+                            <Spinner />
+                        </td>
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+    </div>
+    @if (users is not null && (users.Items.Count >= Query.PageSize || Query.Page > 1))
+    {
+        <Pagination CurrentPage="Query.Page" OnPageChange="OnPageChange" />
+    }
+</Section>

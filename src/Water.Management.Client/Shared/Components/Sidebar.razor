@@ -1,0 +1,63 @@
+﻿<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <NavLink class='@GetNavLinkClass("dashboard")' href="/" @onclick='(() => ToggleCollapse("dashboard"))' Match="NavLinkMatch.All">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </NavLink>
+        </li>
+        <AuthorizeView Roles="superAdministrator">
+
+                <li class="nav-item">
+                    <NavLink class='@GetNavLinkClass("users")' href="/users" @onclick='(() => ToggleCollapse("users"))'>
+                        <i class="bi bi-people"></i>
+                        <span>User Management</span>
+                    </NavLink>
+                </li>
+
+        </AuthorizeView>
+        
+        <li class="nav-heading">Master Data</li>
+
+        <li class="nav-item">
+            <NavLink class='@GetNavLinkClass("water-source")' href="/water-source" @onclick='(() => ToggleCollapse("water-source"))'>
+                <i class="bi bi-menu-button-wide"></i>
+                <span>Water Source</span>
+            </NavLink>
+        </li>
+
+        <li class="nav-item">
+            <NavLink class='@GetNavLinkClass("geophysics")' href="/geophysics" @onclick='(() => ToggleCollapse("geophysics"))'>
+                <i class="bi bi-menu-button-wide"></i>
+                <span>Geophysics Data</span>
+            </NavLink>
+        </li>
+
+        <li class="nav-heading">Features</li>
+
+        <li class="nav-item">
+            <NavLink class='@GetNavLinkClass("gis")' href="/gis" target="_blank">
+                <i class="bi bi-geo-alt"></i>
+                <span>Show in maps</span>
+            </NavLink>
+        </li>
+
+        @* <li class="nav-item">
+        <a class='@GetNavLinkClass("master-nav")' data-bs-target="#master-nav" data-bs-toggle="collapse" href="#" @onclick='(() => ToggleCollapse("master-nav"))'>
+        <i class="bi bi-menu-button-wide"></i><span>Master Data</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="master-nav" class='@GetCollapseClass("master-nav")' data-bs-parent="#sidebar-nav">
+        <li>
+        <NavLink href="/master-data/water-supply">
+        <i class="bi bi-circle"></i><span>Water Supply</span>
+        </NavLink>
+        </li>
+        <li>
+        <NavLink href="/master-data/social-mapping">
+        <i class="bi bi-circle"></i><span>Social Mapping Data</span>
+        </NavLink>
+        </li>
+        </ul>
+        </li> *@
+    </ul>
+</aside>

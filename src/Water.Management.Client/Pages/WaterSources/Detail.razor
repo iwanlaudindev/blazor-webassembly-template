@@ -1,0 +1,233 @@
+﻿@page "/water-source/detail"
+@page "/water-source/detail/{waterSourceId:guid}"
+
+@attribute [Authorize]
+
+<PageTitle>Detail Water Source - Water Management System</PageTitle>
+
+<Breadcrumbs Title="Detail Water Source"
+             BreadcrumbItems="@(new List<BreadcrumbItem>
+             {
+                new("Water Source", "", false),
+                new("List", "/water-source", false),
+                new("Detail Water Source", "", true)
+             })" />
+
+<Section>
+    @if (!isLoading)
+    {
+        <div class="row align-items-center g-2 my-3">
+            <div class="col-md-6 fw-bold">
+                @if (waterSource?.LastStatus == "Pending")
+                {
+                    <span class="badge bg-warning"><i class="bi bi-circle-fill"></i> @waterSource.LastStatus</span>
+                }
+                else if (waterSource?.LastStatus == "Rejected")
+                {
+                    <span class="badge bg-danger"><i class="bi bi-circle-fill"></i> @waterSource.LastStatus</span>
+                }
+                else
+                {
+                    <span class="badge bg-success"><i class="bi bi-circle-fill"></i> @waterSource?.LastStatus</span>
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="row g-1 justify-content-md-end">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-sm btn-blue" data-bs-toggle="modal" data-bs-target="#baseModal">
+                            <i class="bi bi-box-arrow-in-up-left me-1"></i> Approval Water Source
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-sm btn-blue-lighter" @onclick="(() => HandleClickButttonEdit(waterSource?.WaterSupplyId))">
+                            <i class="bi bi-pencil-square me-1"></i> Edit Water Source
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row g-3">
+            @if (waterSource is not null)
+            {
+                <div class="col-12">
+                    <div class="row g-1">
+                        <div class="col-md-4">
+                            <span>ID</span>
+                            <h6 class="fw-bold">@waterSource.Code</h6>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Name</span>
+                            <h6 class="fw-bold">@waterSource.Name</h6>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Survey Date</span>
+                            <h6 class="fw-bold">@waterSource.StartSurveyDt - @waterSource.EndSurveyDt</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Coordinate</span>
+                            <h6 class="fw-bold">@waterSource.Latitude, @waterSource.Longitude</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Water Type</span>
+                            <h6 class="fw-bold">@waterSource.Type@(!string.IsNullOrEmpty(waterSource.TypeOther) ? $", {waterSource.TypeOther}" : "")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Water Condition</span>
+                            @if (waterSource.Conditions is not null || !string.IsNullOrWhiteSpace(waterSource.ConditionOther))
+                            {
+                                <h6 class="fw-bold">
+                                    @{
+                                        List<string> conditionsList = new List<string>();
+
+                                        if (waterSource.Conditions is not null)
+                                        {
+                                            conditionsList.AddRange(waterSource.Conditions.Select(e => e.Name)!);
+                                        }
+
+                                        if (!string.IsNullOrWhiteSpace(waterSource.ConditionOther))
+                                        {
+                                            conditionsList.Add(waterSource.ConditionOther);
+                                        }
+
+                                        string result = string.Join(", ", conditionsList);
+                                    }
+
+                                    @result
+                                </h6>
+                            }
+                            else
+                            {
+                                <h6>-</h6>
+                            }
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Ph</span>
+                            <h6 class="fw-bold">
+                                @(waterSource.Ph.HasValue ? waterSource.Ph : "-")
+                            </h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>TDSPPM</span>
+                            <h6 class="fw-bold">
+                                @(waterSource.TDSPPM.HasValue ? waterSource.TDSPPM : "-") <span class="fs-6 fw-normal">ppm</span>
+                            </h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Depth</span>
+                            <h6 class="fw-bold">
+                                @(waterSource.Depth.HasValue ? waterSource.Depth : "-") <span class="fs-6 fw-normal">Meter</span>
+                            </h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Water Table</span>
+                            <h6 class="fw-bold">@(waterSource.WaterTable.HasValue ? waterSource.WaterTable : "-") <span class="fs-6 fw-normal">Meter</span></h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Elevation</span>
+                            <h6 class="fw-bold">@(waterSource.Elevation.HasValue ? waterSource.Elevation : "-") <span class="fs-6 fw-normal">MDPL</span></h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Location</span>
+                            <h6 class="fw-bold">
+                                @waterSource.Province,
+                                @waterSource.City,
+                                @waterSource.District,
+                                @waterSource.SubDistrict
+                            </h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Detail Location</span>
+                            <h6 class="fw-bold">@(waterSource.DetailLocation ?? "-")</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <h5 class="fw-bold">Description</h5>
+                    <div class="row g-1">
+                        <div class="col-md-4 label">
+                            <span>Social Mapping</span>
+                            <h6 class="fw-bold">@(waterSource.SocialMapping ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Demography</span>
+                            <h6 class="fw-bold">@(waterSource.Demography ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>General Geology</span>
+                            <h6 class="fw-bold">@(waterSource.GeneralGeology ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Rainfall</span>
+                            <h6 class="fw-bold">@(waterSource.Rainfall ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Vegetation</span>
+                            <h6 class="fw-bold">@(waterSource.Vegetation ?? "-")</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <h5 class="fw-bold">Images</h5>
+                    <div class="row row-cols-1 row-cols-md-4 g-2">
+                        @if (waterSource.Images is not null)
+                        {
+                            foreach (var item in waterSource.Images)
+                            {
+                                <div class="col">
+                                    <img src="@item.Uri" class="img-thumbnail" alt="...">
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 label text-center">
+                    <h5 class="fw-bold">Data tidak ditemukan!</h5>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <Spinner />
+    }
+</Section>
+
+<Modal
+    Title="@(!string.IsNullOrWhiteSpace(title) ? title : "Accept Water Source?")"
+    FooterContentClass="d-flex justify-content-center">
+    
+    <BodyContent>
+        @if(!isApproved)
+        {
+            <p class="text-center">
+                Ensure that all water source data has been checked before accepting or rejecting.
+            </p>
+        }
+        else
+        {
+            <p class="text-center">@message.</p>
+        }
+        
+    </BodyContent>
+    
+    <FooterContent>
+        @if(!isApproved)
+        {
+            <button type="button" class="btn btn-sm btn-success" @onclick="(() => HandleClickButttonApproval(true))">Accept Water Supply</button>
+
+            <button type="button" class="btn btn-sm btn-danger" @onclick="(() => HandleClickButttonApproval(false))">Reject Water Supply</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="HaldleClickOk">Oke!</button>
+        }
+    </FooterContent>
+
+</Modal>

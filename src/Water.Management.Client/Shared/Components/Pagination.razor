@@ -1,0 +1,33 @@
+﻿<!-- Pagination with icons -->
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        <li class="page-item @(CurrentPage <= 1 ? "disabled" : "")">
+            <a class="page-link btn-blue-lighter" href="javascript:void(0)" aria-label="Previous" aria-disabled="true" @onclick:preventDefault @onclick="(() => ChangePage(CurrentPage - 1))">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="javascript:void(0)" @onclick:preventDefault>@CurrentPage</a></li>
+        <li class="page-item">
+            <a class="page-link btn-blue-lighter" href="javascript:void(0)" aria-label="Next" @onclick="(() => ChangePage(CurrentPage + 1))">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- End Pagination with icons -->
+
+@code {
+    [Parameter]
+    public int CurrentPage { get; set; } = 1;
+    [Parameter] 
+    public EventCallback<int> OnPageChange { get; set; }
+
+    private async Task ChangePage(int newPage)
+    {
+        if (newPage >= 1)
+        {
+            CurrentPage = newPage;
+            await OnPageChange.InvokeAsync(CurrentPage);
+        }
+    }
+}

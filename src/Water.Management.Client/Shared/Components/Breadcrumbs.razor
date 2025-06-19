@@ -1,0 +1,22 @@
+﻿<div class="pagetitle">
+    <h1>@Title</h1>
+    <nav>
+        <ol class="breadcrumb">
+            @foreach (var item in BreadcrumbItems)
+            {
+                <li class="breadcrumb-item@(item.IsActive ? " active" : "")">
+                    @if (!string.IsNullOrEmpty(item.Href))
+                    {
+                        <a href="@item.Href">@item.Label</a>
+                    }
+                    else
+                    {
+                        @item.Label
+                    }
+                </li>
+            }
+        </ol>
+    </nav>
+</div>
+
+

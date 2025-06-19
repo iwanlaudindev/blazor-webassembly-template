@@ -1,0 +1,81 @@
+﻿@page "/users/create"
+
+@attribute [Authorize]
+
+<PageTitle>Add User - Water Management System</PageTitle>
+
+<Breadcrumbs Title="Add User"
+             BreadcrumbItems="@(new List<BreadcrumbItem>
+             {
+                new("User Management", "", false),
+                new("List", "/users", false),
+                new("Add User", "", true)
+             })" />
+
+<Section>
+    <EditForm class="row g-3 my-3" Model="User" OnValidSubmit="HandleUserCreate">
+        <DataAnnotationsValidator />
+        <ValidationSummary style="color:indianred" Model="@User" />
+
+        <div class="col-md-6">
+            <label for="username" class="form-label fw-bold text-secondary">Username<RequiredInput /></label>
+            <InputText type="text" @bind-Value="User.Username" class="form-control form-control-sm" id="username" />
+            <ValidationMessage class="validation-message" For="(() => User.Username)"></ValidationMessage>
+        </div>
+        <div class="col-md-6">
+            <label for="fullName" class="form-label fw-bold text-secondary">Full Name<RequiredInput /></label>
+            <InputText type="text" @bind-Value="User.FullName" class="form-control form-control-sm" id="fullName" />
+            <ValidationMessage class="validation-message" For="(() => User.FullName)"></ValidationMessage>
+        </div>
+        <div class="col-md-6">
+            <label for="email" class="form-label fw-bold text-secondary">Email<RequiredInput /></label>
+            <InputText type="email" @bind-Value="User.Email" class="form-control form-control-sm" id="email" />
+            <ValidationMessage class="validation-message" For="(() => User.Email)"></ValidationMessage>
+        </div>
+        <div class="col-md-6">
+            <label for="phoneNumber" class="form-label fw-bold text-secondary">Phone Number<RequiredInput /></label>
+            <InputText type="text" @bind-Value="User.PhoneNumber" class="form-control form-control-sm" id="phoneNumber" />
+            <ValidationMessage class="validation-message" For="(() => User.PhoneNumber)"></ValidationMessage>
+        </div>
+        <div class="col-md-6">
+            <label for="password" class="form-label fw-bold text-secondary">Password<RequiredInput /></label>
+            <InputText type="password" @bind-Value="User.Password" class="form-control form-control-sm" id="password" />
+            <ValidationMessage class="validation-message" For="(() => User.Password)"></ValidationMessage>
+        </div>
+        <div class="col-md-6">
+            <label for="role" class="form-label fw-bold text-secondary">Role<RequiredInput /></label>
+            <InputSelect id="role" class="form-select" @bind-Value="User.RoleId">
+                <option selected>Choose...</option>
+                @foreach(var role in RolesVm)
+                {
+                    <option value="@role.RoleId">@role.Name</option>
+                }
+            </InputSelect>
+            <ValidationMessage class="validation-message" For="@(() => User.RoleId)" />
+        </div>
+
+        <div class="mt-3">
+            <hr>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-sm btn-blue" type="submit" disabled="@isLoadingButton">
+                @if (isLoadingButton)
+                {
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    <span role="status">Loading...</span>
+                }
+                else
+                {
+                    <span>Save</span>
+                }
+            </button>
+
+            <Button Title="Cancel"
+                    ButtonColor="btn-secondary"
+                    ButtonIcon="bi-backspace"
+                    ButtonType="button"
+                    OnClick="HandleButtonCancel" />
+        </div>
+    </EditForm>
+</Section>
+

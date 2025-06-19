@@ -1,0 +1,105 @@
+﻿@page "/users/detail"
+@page "/users/detail/{userId:guid}"
+
+@attribute [Authorize]
+
+<PageTitle>Detail User - Water Management System</PageTitle>
+
+<Breadcrumbs Title="Detail User"
+             BreadcrumbItems="@(new List<BreadcrumbItem>
+             {
+                new("User Management", "", false),
+                new("List", "/users", false),
+                new("Detail User", "", true)
+             })" />
+
+<Section>
+    @if (!isLoading)
+    {
+        <div class="row g-1 my-3 justify-content-md-end">
+            <div class="col-auto">
+                <button type="button" class="btn btn-sm btn-blue" data-bs-toggle="modal" data-bs-target="#baseModal">
+                    <i class="bi bi-box-arrow-in-up-left me-1"></i> Reset Password
+                </button>
+            </div>
+            <div class="col-auto">
+                <a class="btn btn-sm btn-blue-lighter link-primary" href="@($"/users/edit/{User?.UserId}")" role="button">
+                    <i class="bi bi-pencil-square me-1"></i> Edit User
+                </a>
+            </div>
+        </div>
+        <hr />
+        <div class="row g-1">
+            @if (User is not null)
+            {
+                <div class="col-lg-4 col-md-4">
+                    <span>Username</span>
+                    <h6 class="fw-bold">@User.Username</h6>
+                </div>
+                <div class="col-lg-4 col-md-4 label ">
+                    <span>Full Name</span>
+                    <h6 class="fw-bold">@User.FullName</h6>
+                </div>
+                <div class="col-lg-4 col-md-4 label ">
+                    <span>Role</span>
+                    <h6 class="fw-bold">@User.Role</h6>
+                </div>
+                <div class="col-lg-4 col-md-4 label ">
+                    <span>Email</span>
+                    <h6 class="fw-bold">@User.Email</h6>
+                </div>
+                <div class="col-lg-4 col-md-4 label ">
+                    <span>Phone Number</span>
+                    <h6 class="fw-bold">@User.PhoneNumber</h6>
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 label text-center">
+                    <h5 class="fw-bold">Data tidak ditemukan!</h5>
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <Spinner />
+    }
+</Section>
+
+
+<Modal Title="@(!string.IsNullOrWhiteSpace(title) ? title : "Are you sure you want to do a password reset?")"
+       FooterContentClass="d-flex justify-content-center">
+
+    <BodyContent>
+        @if (!isApproved)
+        {
+            <p class="text-center">
+                By performing this action, the user password will be set to default.
+            </p>
+        }
+        else
+        {
+            <p class="text-center">@message.</p>
+        }
+
+    </BodyContent>
+
+    <FooterContent>
+        @if (!isApproved)
+        {
+            <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Cancel</button>
+            <button type="button"
+                    class="btn btn-sm btn-success"
+                    @onclick="(() => HandleResetPassword(User!.UserId))">
+                Reset Password
+            </button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal" @onclick="HaldleClickOk">Oke!</button>
+        }
+    </FooterContent>
+
+</Modal>

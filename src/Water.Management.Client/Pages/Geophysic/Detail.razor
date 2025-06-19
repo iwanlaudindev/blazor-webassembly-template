@@ -1,0 +1,179 @@
+﻿@page "/geophysics/detail"
+@page "/geophysics/detail/{geophysicsId:guid}"
+
+@attribute [Authorize]
+
+<PageTitle>Detail Geophysics Data - Water Management System</PageTitle>
+
+<Breadcrumbs Title="Detail Geophysics Data"
+             BreadcrumbItems="@(new List<BreadcrumbItem>
+             {
+                new("Geophysics Data", "", false),
+                new("List", "/geophysics", false),
+                new("Detail Geophysics Data", "", true)
+             })" />
+
+<Section>
+    @if (!isLoading)
+    {
+        <div class="row align-items-center g-2 my-3">
+            <div class="col-md-6 fw-bold">
+                @if (geophysics?.Status == "Pending")
+                {
+                    <span class="badge bg-warning"><i class="bi bi-circle-fill"></i> @geophysics.Status</span>
+                }
+                else if (geophysics?.Status == "Rejected")
+                {
+                    <span class="badge bg-danger"><i class="bi bi-circle-fill"></i> @geophysics.Status</span>
+                }
+                else
+                {
+                    <span class="badge bg-success"><i class="bi bi-circle-fill"></i> @geophysics?.Status</span>
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="row g-1 justify-content-md-end">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-sm btn-blue" data-bs-toggle="modal" data-bs-target="#baseModal">
+                            <i class="bi bi-box-arrow-in-up-left me-1"></i> Approval Geophysics Data
+                        </button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-sm btn-blue-lighter" @onclick="(() => HandleClickButttonEdit(geophysics?.GeophysicsId))">
+                            <i class="bi bi-pencil-square me-1"></i> Edit Geophysics Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="row g-3">
+            @if (geophysics is not null)
+            {
+                <div class="col-12">
+                    <div class="row g-1">
+                        <div class="col-md-4">
+                            <span>ID</span>
+                            <h6 class="fw-bold">@geophysics.Code</h6>
+                        </div>
+                        <div class="col-md-4">
+                            <span>Survey Date</span>
+                            <h6 class="fw-bold">@geophysics.StartSurveyDt - @geophysics.EndSurveyDt</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Coordinate</span>
+                            <h6 class="fw-bold">@geophysics.Latitude, @geophysics.Longitude</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Aquifer</span>
+                            <h6 class="fw-bold">
+                                @(geophysics.Aquifer.HasValue ? geophysics.Aquifer : "-")
+                            </h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Elevation</span>
+                            <h6 class="fw-bold">@(geophysics.Elevation.HasValue ? geophysics.Elevation : "-") <span class="fs-6 fw-normal">MDPL</span></h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Location</span>
+                            <h6 class="fw-bold">
+                                @geophysics.Province,
+                                @geophysics.City,
+                                @geophysics.District,
+                                @geophysics.SubDistrict
+                            </h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Detail Location</span>
+                            <h6 class="fw-bold">@(geophysics.DetailLocation ?? "-")</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <h5 class="fw-bold">Description</h5>
+                    <div class="row g-1">
+                        <div class="col-md-4 label">
+                            <span>Social Mapping</span>
+                            <h6 class="fw-bold">@(geophysics.SocialMapping ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Demography</span>
+                            <h6 class="fw-bold">@(geophysics.Demography ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>General Geology</span>
+                            <h6 class="fw-bold">@(geophysics.GeneralGeology ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Rainfall</span>
+                            <h6 class="fw-bold">@(geophysics.Rainfall ?? "-")</h6>
+                        </div>
+                        <div class="col-md-4 label">
+                            <span>Vegetation</span>
+                            <h6 class="fw-bold">@(geophysics.Vegetation ?? "-")</h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <h5 class="fw-bold">Images</h5>
+                    <div class="row row-cols-1 row-cols-md-4 g-2">
+                        @if(geophysics.Images is not null)
+                        {
+                            foreach(var item in geophysics.Images)
+                            {
+                                <div class="col">
+                                    <img src="@item.Uri" class="img-thumbnail" alt="...">
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-12 col-md-12 label text-center">
+                    <h5 class="fw-bold">Data tidak ditemukan!</h5>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <Spinner />
+    }
+</Section>
+
+<Modal Title="@(!string.IsNullOrWhiteSpace(title) ? title : "Accept Geophysics Data?")"
+       FooterContentClass="d-flex justify-content-center">
+
+    <BodyContent>
+        @if (!isApproved)
+        {
+            <p class="text-center">
+                Ensure that all geophysical data has been checked before accepting or rejecting.
+            </p>
+        }
+        else
+        {
+            <p class="text-center">@message.</p>
+        }
+
+    </BodyContent>
+
+    <FooterContent>
+        @if (!isApproved)
+        {
+            <button type="button" class="btn btn-sm btn-success" @onclick="(() => HandleClickButttonApproval(true))">Accept Geophysical Data</button>
+
+            <button type="button" class="btn btn-sm btn-danger" @onclick="(() => HandleClickButttonApproval(false))">Reject Geophysical Data</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="HaldleClickOk">Oke!</button>
+        }
+    </FooterContent>
+
+</Modal>

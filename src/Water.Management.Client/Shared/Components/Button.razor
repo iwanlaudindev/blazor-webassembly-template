@@ -1,0 +1,33 @@
+﻿
+<button type="@ButtonType" class="btn @ButtonColor btn-sm" @onclick="OnClickCallback">
+    <i class="bi @ButtonIcon @IconColor me-1"></i> @Title
+</button>
+
+@code
+{
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public string? ButtonType { get; set; }
+
+    [Parameter]
+    public string? ButtonColor { get; set; }
+
+    [Parameter]
+    public string? ButtonIcon { get; set; }
+
+    [Parameter]
+    public string? IconColor { get; set; }
+
+    private async Task OnClickCallback()
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}

@@ -1,0 +1,103 @@
+﻿@page "/"
+
+@attribute [Authorize]
+
+<PageTitle>Dashboard - Water Management System</PageTitle>
+
+<Breadcrumbs Title="Dashboard"
+             BreadcrumbItems="@(new List<BreadcrumbItem>
+             {
+                new("Dashboard", "", true)
+             })" />
+
+<section class="section dashboard">
+    <div class="row">
+        <div class="col-xxl-4 col-md-4">
+            <Card CardClass="revenue-card"
+                    Titel="Users" 
+                    Value="summary?.UserCount"
+                    TextColor="text-success"
+                    Icon="bi bi-people" />
+        </div>
+        <div class="col-xxl-4 col-md-4">
+            <Card CardClass="sales-card"
+                    Titel="Water Sources"
+                    Value="@summary?.WaterSourceCount"
+                    TextColor="text-success"
+                    Icon="bi bi-droplet-half" />
+        </div>
+        <div class="col-xxl-4 col-md-4">
+            <Card CardClass="customers-card"
+                    Titel="Geophysics"
+                    Value="@summary?.GeophysicsCount"
+                    TextColor="text-danger"
+                    Icon="bi bi-geo" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card top-selling overflow-auto">
+                <div class="card-body pb-0">
+                    <h5 class="card-title">New Water Source</h5>
+
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Code</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Survey Date</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!isLoading)
+                            {
+                                @if (waterSources is not null && waterSources.Count > 0)
+                                {
+                                    int Number = 1;
+                                    @foreach (var item in waterSources)
+                                    {
+                                        <tr>
+                                            <th scope="row">@Number</th>
+                                            <td>
+                                                <a href="@($"/water-source/detail/{item.WaterSupplyId}")" class="text-primary fw-bold">@item.Code</a>
+                                            </td>
+                                            <td>@item.Name</td>
+                                            <td>@item.StartSurveyDt - @item.EndSurveyDt</td>
+                                            <td>@item.CreatedByName</td>
+                                            <td><span class="badge bg-warning">@item.LastStatus</span></td>
+                                        </tr>
+
+                                        Number++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="text-center p-5 my-5">
+                                                <p class="h5">The latest data is not yet available!</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7">
+                                        <Spinner />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
